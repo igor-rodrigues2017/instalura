@@ -16,11 +16,15 @@ export default class Login extends Component {
 			body: JSON.stringify({login: this.login.value, senha: this.password.value})
 		}).then(response => {
 			if (!response.ok) {
-				this.setState({errorMsg:'login or password invalid'});
+				throw new Error('login or password invalid')
 			} else {
 				return response.text();
 			}
-		}).then(token => console.log(token));
+		}).then(token => {
+			localStorage.setItem('auth-token', token);
+			this.props.history.push('/timeline') // https://dev.to/projectescape/programmatic-navigation-in-react-3p1l
+		})
+			.catch(error => this.setState({errorMsg:error.message}))
 	}
 
 	render() {
