@@ -8,12 +8,15 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Login from "./components/Login";
+import PrivateRoute from "./components/PrivateRoute";
+import Logout from "./components/Logout";
 
 ReactDOM.render(
 	(
 		<BrowserRouter>
 			<Switch>
-				<Route path='/timeline' component={App} />
+				<PrivateRoute path='/timeline' component={App} />
+				<Route path='/logout' component={Logout} />
 				<Route path='/' component={Login} />
 			</Switch>
 		</BrowserRouter>
