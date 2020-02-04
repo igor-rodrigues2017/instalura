@@ -15,6 +15,7 @@ ReactDOM.render(
 	(
 		<BrowserRouter>
 			<Switch>
+				<Route path='/timeline/:login' component={App} />
 				<PrivateRoute path='/timeline' component={App} />
 				<Route path='/logout' component={Logout} />
 				<Route path='/' component={Login} />
