@@ -2,15 +2,25 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 
 class FotoAtualizacoes extends Component {
+
+	like(event) {
+		event.preventDefault()
+		this.props.like(this.props.foto.id);
+	}
+
+	comment(event) {
+		event.preventDefault();
+		this.props.comment(this.props.foto.id, this.comentario.value);
+	}
+
 	render(){
 		return (
 			<section className="fotoAtualizacoes">
-				<a href="#" className="fotoAtualizacoes-like">Likar</a>
-				<form className="fotoAtualizacoes-form">
-					<input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo"/>
+				<a onClick={this.like.bind(this)} className={this.props.foto.likeada ? 'fotoAtualizacoes-like-ativo' : 'fotoAtualizacoes-like'}>Likar</a>
+				<form className="fotoAtualizacoes-form" onSubmit={this.comment.bind(this)}>
+					<input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo" ref={input => this.comentario = input}/>
 					<input type="submit" value="Comentar!" className="fotoAtualizacoes-form-submit"/>
 				</form>
-
 			</section>
 		);
 	}
@@ -23,7 +33,7 @@ class FotoInfo extends Component {
 				<div className="foto-info-likes">
 					{
 						this.props.foto.likers.map(liker => {
-							return (<Link key={liker.login} href={`/timeline/${liker.login}`}>liker.login </Link>)
+							return (<Link key={liker.login} href={`/timeline/${liker.login}`}>{liker.login} </Link>)
 						})
 					}
 					{
@@ -79,7 +89,7 @@ export default class FotoItem extends Component {
 				<FotoHeader foto={this.props.foto}/>
 				<img alt="foto" className="foto-src" src={this.props.foto.urlFoto} />
 				<FotoInfo foto={this.props.foto}/>
-				<FotoAtualizacoes/>
+				<FotoAtualizacoes {...this.props} />
 			</div>
 		);
 	}
