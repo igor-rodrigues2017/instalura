@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import Header from "./components/Header";
 import Timeline from "./components/Timeline";
-import TimelineStore from "./logics/TimelineStore";
+import {timeline} from './reducers/timeline'
+import {createStore, applyMiddleware} from "redux";
+import thunkMiddleware from 'redux-thunk';
 
-const timelineStore = new TimelineStore([]);
+const store = createStore(timeline, applyMiddleware(thunkMiddleware));
 
 class App extends Component {
-
 
     render() {
         const { login } = this.props.match.params
@@ -14,7 +15,7 @@ class App extends Component {
             <div id="root">
                 <div className="main">
                     <Header />
-                    <Timeline login={login} store={timelineStore}/>
+                    <Timeline login={login} store={store}/>
                 </div>
             </div>
         );
