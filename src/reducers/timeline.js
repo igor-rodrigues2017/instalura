@@ -1,28 +1,39 @@
-export function timeline(state = [], action) {
+import {List} from "immutable";
+
+function alterFoto(state, fotoId, callBackUpdatePropertie) {
+	const fotoOldState = state.find(foto => foto.id === fotoId);
+	const fotoActualState = Object.assign({}, fotoOldState, callBackUpdatePropertie(fotoOldState));
+	const fotoIndex = state.findIndex(foto => foto.id === fotoId);
+	const actualList = state.set(fotoIndex, fotoActualState);
+	return actualList;
+}
+
+export function timeline(state = new List(), action) {
 	if (action.type === 'LISTAGEM') {
-		return action.fotos;
+		return new List(action.fotos);
 	}
 
 	if (action.type === 'COMENTARIO') {
-		const fotoAchada = state.find(foto => foto.id === action.fotoId);
-		fotoAchada.comentarios.push(action.novoComentario);
-		return state;
+		return alterFoto(state, action.fotoId, fotoOldState => {
+			const comentatiosAtualizados = fotoOldState.comentarios.concat(action.novoComentario);
+			return {comentarios: comentatiosAtualizados};
+		});
 	}
 
 	if (action.type === 'LIKE') {
-		const liker = action.liker;
-		const fotoAchada = state.find(foto => foto.id === action.fotoId);
-		fotoAchada.likeada = !fotoAchada.likeada;
+		return alterFoto(state, action.fotoId, fotoOldState => {
+			const likeada = !fotoOldState.likeada;
+			const liker = action.liker;
+			const possivelLiker = fotoOldState.likers.find(likerAtual => likerAtual.login === liker.login);
 
-		const possivelLiker = fotoAchada.likers.find(likerAtual => likerAtual.login === liker.login);
-
-		if(possivelLiker === undefined){
-			fotoAchada.likers.push(liker);
-		} else {
-			const novosLikers = fotoAchada.likers.filter(likerAtual => likerAtual.login !== liker.login);
-			fotoAchada.likers = novosLikers;
-		}
-		return state;
+			let novosLikers;
+			if(possivelLiker === undefined){
+				novosLikers = fotoOldState.likers.concat(liker);
+			} else {
+				novosLikers = fotoOldState.likers.filter(likerAtual => likerAtual.login !== liker.login);
+			}
+			return {likeada, likers: novosLikers};
+		});
 	}
 
 	return state;
