@@ -9,3 +9,7 @@ export function comentario(fotoId, novoComentario) {
 export function like(fotoId, liker) {
 	return {type: 'LIKE', fotoId, liker};
 }
+
+export function notify(msg) {
+	return {type: 'NOTIFICACAO', msg};
+}

@@ -1,16 +1,24 @@
 import React, {Component} from "react";
 import LogoutButton from "./LogoutButton";
-import PubSub from 'pubsub-js';
+import TimelineApi from "../logics/TimelineApi";
+import {notifyError} from "../reducers/notify";
 
 export default class Header extends Component {
 
+	constructor() {
+		super();
+		this.state = {msg: ''};
+	}
+
+	componentDidMount() {
+		this.props.store.subscribe(() => {
+			this.setState({msg: this.props.store.getState().notifyError});
+		})
+	}
+
 	search(event) {
 		event.preventDefault();
-		fetch(`http://localhost:8080/api/public/fotos/${this.loginSearch.value}`)
-			.then(response => response.json())
-			.then(fotos => {
-				PubSub.publish('timeline', fotos);
-			});
+		this.props.store.dispatch(TimelineApi.search(this.loginSearch.value))
 	}
 
 	render() {
@@ -24,7 +32,7 @@ export default class Header extends Component {
 					<input type="text" name="search" placeholder="Pesquisa" className="header-busca-campo" ref={input => this.loginSearch = input}/>
 					<input type="submit" value="Buscar" className="header-busca-submit"/>
 				</form>
-
+				<span>{this.state.msg}</span>
 				<nav>
 					<ul className="header-nav">
 						<li className="header-nav-item">
