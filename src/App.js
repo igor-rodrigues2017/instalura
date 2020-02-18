@@ -9,16 +9,17 @@ class App extends Component {
         const { login } = this.props.match.params;
         return (
             <ReactReduxContext.Consumer>
-                {( {store} ) => {
-                    return (
-                        <div id="root">
-                            <div className="main">
-                                <Header store={store}/>
-                                <Timeline login={login} store={store}/>
+                {( {store} ) =>
+                    {
+                        return (
+                            <div id="root">
+                                <div className="main">
+                                    <Header store={store}/>
+                                    <Timeline login={login} store={store}/>
+                                </div>
                             </div>
-                        </div>
-                    )
-                }
+                        )
+                    }
                 }
             </ReactReduxContext.Consumer>
         );
